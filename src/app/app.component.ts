@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { Router } from 'express';
 import { AuthServiceService } from './services/auth-service.service';
 
@@ -9,7 +9,9 @@ import { AuthServiceService } from './services/auth-service.service';
 })
 export class AppComponent {
 
-  constructor(private authService: AuthServiceService) {}
+  constructor(private authService: AuthServiceService, @Inject('isMobile') isMob: any) {
+    console.log(isMob)
+  }
 
   get isLoggedIn(){
     return this.authService.isLoggedIn
