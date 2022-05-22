@@ -1,0 +1,22 @@
+.form-group {
+  margin-bottom: 1REM;
+  display: flex;
+  flex-direction: column;
+}
+
+.ng-valid:not(form) {
+  border-left: 5px solid green;
+}
+
+.ng-invalid:not(form) {
+  border-left: 5px solid red;
+}
+
+.alert {
+  min-height: 2REM;
+
+  &-danger {
+    color: red;
+    background-color: rgba(255, 0, 0, 0.397);
+  }
+}

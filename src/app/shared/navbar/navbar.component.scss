@@ -1,0 +1,10 @@
+.toolbar--login {
+  display: inline-block;
+  margin-left: 1rem;
+
+  & &--logout {
+    & > :not(:first-child) {
+      margin-left: 0.5rem;
+    }
+  }
+}
