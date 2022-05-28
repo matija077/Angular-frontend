@@ -1,16 +1,26 @@
-import { Component, Inject } from '@angular/core';
+import { AfterViewChecked, Component, Inject, ViewChild } from '@angular/core';
 import { Router } from 'express';
-import { AuthServiceService } from './services/auth-service.service';
+import { AuthServiceService } from './services/auth-service/auth-service.service';
+import { OrientationService } from './services/orientation-service/orientation.service';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent {
+export class AppComponent implements AfterViewChecked {
+  @ViewChild('test') testic: any;
+   twoWayBind?: string;
 
-  constructor(private authService: AuthServiceService, @Inject('isMobile') isMob: any) {
+  constructor(private authService: AuthServiceService, @Inject('isMobile') isMob: any, os: OrientationService) {
     console.log(isMob)
+  }
+  twoWayBindChange() {
+
+  }
+
+  ngAfterViewChecked() {
+
   }
 
   get isLoggedIn(){

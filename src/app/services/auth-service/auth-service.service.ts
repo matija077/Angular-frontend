@@ -1,12 +1,16 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, combineLatest } from 'rxjs';
+import { Roles } from 'src/app/types/consts';
 
 interface ICallback<P, T> {
   (props: P): T;
 }
 
-interface ILogin {}
+interface IAuthServiceSubscribeCallback {
+  isLoggedIn: boolean;
+  role: Roles;
+}
 
 @Injectable({
   providedIn: 'root',
@@ -15,6 +19,7 @@ export class AuthServiceService implements OnDestroy {
   private url = 'http://127.0.0.1:8080/api/';
   private headers = new HttpHeaders();
   private isLoggedIn$ = new BehaviorSubject(false);
+  private role$ = new BehaviorSubject(Roles.anonymus);
 
   constructor(private http: HttpClient) {
     this.silentLogin();
@@ -22,6 +27,7 @@ export class AuthServiceService implements OnDestroy {
 
   ngOnDestroy() {
     this.isLoggedIn$.unsubscribe();
+    this.role$.unsubscribe();
   }
 
   login() {
@@ -32,6 +38,7 @@ export class AuthServiceService implements OnDestroy {
         next: (data) => {
           console.log(data);
           this.isLoggedIn$.next(!!data);
+          this.role$.next(Roles.admin);
         },
         error: (err) => console.error(err),
       });
@@ -41,8 +48,10 @@ export class AuthServiceService implements OnDestroy {
   }
   register() {}
   logout() {
-    const body = {};
     this.isLoggedIn$.next(false);
+    this.role$.next(Roles.anonymus);
+
+    const body = {};
     this.http
       .post(`${this.url}logout`, body, { headers: this.headers })
       .subscribe({
@@ -56,9 +65,18 @@ export class AuthServiceService implements OnDestroy {
   get isLoggedIn() {
     return this.isLoggedIn$.getValue();
   }
-  subscribe(cb: ICallback<boolean, void>) {
-    this.isLoggedIn$.subscribe({
+  get role() {
+    return this.role$.getValue();
+  }
+  subscribe(cb: ICallback<IAuthServiceSubscribeCallback, void>) {
+    /*this.isLoggedIn$.subscribe({
       next: (isLoggedIn) => cb(isLoggedIn),
-    });
+    });*/
+
+    return combineLatest([this.isLoggedIn$, this.role$]).subscribe(
+      ([isLoggedIn, role]) => {
+        cb({ isLoggedIn, role });
+      }
+    );
   }
 }

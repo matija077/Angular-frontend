@@ -7,12 +7,15 @@ import { AppComponent } from './app.component';
 import { PlayerModule } from './player/player.module';
 import { HomeComponent } from './components/home/home.component';
 import { NavbarComponent } from './shared/navbar/navbar.component';
+import { ResizeService } from './services/resize-observer/resize.service';
 
 @NgModule({
   declarations: [AppComponent, HomeComponent, NavbarComponent],
   imports: [BrowserModule, AppRoutingModule, HttpClientModule, PlayerModule],
   providers: [
     { provide: APP_INITIALIZER, useFactory: preLoad, multi: true },
+    { provide: APP_INITIALIZER, useFactory: preLoad, multi: true },
+    { provide: 'ResizeObserver', useClass: ResizeService },
     {
       provide: 'isMobile',
       useFactory: isMobile,
@@ -23,15 +26,17 @@ import { NavbarComponent } from './shared/navbar/navbar.component';
 export class AppModule {}
 
 function preLoad() {
-  return function () {
+  function t() {
     let resolve: (value: unknown) => void;
-    window.setTimeout(() => resolve(1), 5000);
+    window.setTimeout(() => resolve(1), 1000);
 
     return new Promise((res, rej) => (resolve = res));
-  };
+  }
+
+  return t;
 }
 
-function isMobile() {
+function isMobile(t: any) {
   const p = document.documentElement;
   const width = Math.max(p.offsetWidth, p.scrollWidth, p.clientWidth);
   const height = Math.max(p.offsetHeight, p.scrollHeight, p.clientHeight);

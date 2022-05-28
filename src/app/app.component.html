@@ -8,12 +8,12 @@
 <!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
 
 <div class="content">
-  {{isLoggedIn}}
-  <button (click)="login()">Login me</button>
-  <app-navbar></app-navbar>
-<router-outlet>
+  test template variable is user login from navbar: <h6>{{test.isLoggedIn}}</h6>
+  <app-navbar #test></app-navbar>
 
-</router-outlet>
+  <router-outlet>
+
+  </router-outlet>
 </div>
 
 <!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
@@ -23,4 +23,3 @@
 <!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
 <!-- * * * * * * * * * * End of Placeholder * * * * * * * * * * * -->
 <!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
-
