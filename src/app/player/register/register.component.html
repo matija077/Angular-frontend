@@ -1,5 +1,6 @@
 <h2>Reactiv Forms</h2>
-<form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
+<div class="emptySpace"></div>
+<form [formGroup]="formGroup" (ngSubmit)="onSubmit()" #reactiveFormRef >
   <div class="form-group">
     <!-- First Name -->
     <label for="first_name" class="control-label">First Name</label>
@@ -44,7 +45,7 @@
 
   <div class="form-group">
     <!-- Register Button -->
-    <button [disabled]="!formGroup.valid" type="submit" class="btn btn-primary">Register</button>
+    <button  type="submit" class="btn btn-primary">Register</button>
   </div>
 </form>
 

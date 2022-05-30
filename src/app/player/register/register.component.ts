@@ -1,6 +1,13 @@
-import { AfterViewChecked, Component, OnInit, ViewChild } from '@angular/core';
+import {
+  AfterViewChecked,
+  Component,
+  ElementRef,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import {
   AbstractControlOptions,
+  Form,
   FormBuilder,
   FormControl,
   FormGroup,
@@ -27,6 +34,8 @@ export class RegisterComponent implements OnInit, AfterViewChecked {
     ]),
   });*/
   formGroup: FormGroup;
+  @ViewChild('reactiveFormRef')
+  reactiveFormRef?: ElementRef<HTMLFormElement>;
 
   // TEMPLATE PART
   template = {
@@ -41,7 +50,9 @@ export class RegisterComponent implements OnInit, AfterViewChecked {
 
   constructor(
     private fb: FormBuilder,
-    private CustomValidators: CustomValidatorsService
+    private CustomValidators: CustomValidatorsService,
+    // this is an acutal DOM element passed by Angular of this component
+    private el: ElementRef
   ) {
     const controlsConfig = {
       name: [
@@ -94,9 +105,38 @@ export class RegisterComponent implements OnInit, AfterViewChecked {
     return this.formGroup.get(key);
   }
 
+  scrollToFirstError() {
+    const invalidInputs =
+      this.reactiveFormRef?.nativeElement.getElementsByClassName(
+        'ng-invalid'
+      ) ?? [];
+    const firstInvalidInput = invalidInputs[0];
+    if (!firstInvalidInput) {
+      return;
+    }
+
+    const scrollElementToTop = (element: Element) => {
+      const { top } = element.getBoundingClientRect();
+
+      window.scrollTo({
+        top: document.documentElement.scrollTop + top,
+        behavior: 'smooth',
+      });
+    };
+
+    const focusElement = (element: Element, preventScroll = false) => {
+      (element as any).focus({ preventScroll });
+    };
+
+    scrollElementToTop(firstInvalidInput);
+    focusElement(firstInvalidInput, true);
+  }
+
   onSubmit() {
-    //console.log(this.formGroup.controls['name']);
-    console.log(this.formGroup);
+    if (!this.formGroup.valid || this.formGroup.invalid) {
+      this.scrollToFirstError();
+    } else {
+    }
   }
 
   onSubmit2() {
