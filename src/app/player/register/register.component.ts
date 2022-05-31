@@ -105,38 +105,13 @@ export class RegisterComponent implements OnInit, AfterViewChecked {
     return this.formGroup.get(key);
   }
 
-  scrollToFirstError() {
-    const invalidInputs =
-      this.reactiveFormRef?.nativeElement.getElementsByClassName(
-        'ng-invalid'
-      ) ?? [];
-    const firstInvalidInput = invalidInputs[0];
-    if (!firstInvalidInput) {
-      return;
-    }
 
-    const scrollElementToTop = (element: Element) => {
-      const { top } = element.getBoundingClientRect();
-
-      window.scrollTo({
-        top: document.documentElement.scrollTop + top,
-        behavior: 'smooth',
-      });
-    };
-
-    const focusElement = (element: Element, preventScroll = false) => {
-      (element as any).focus({ preventScroll });
-    };
-
-    scrollElementToTop(firstInvalidInput);
-    focusElement(firstInvalidInput, true);
-  }
 
   onSubmit() {
-    if (!this.formGroup.valid || this.formGroup.invalid) {
+    /*if (!this.formGroup.valid || this.formGroup.invalid) {
       this.scrollToFirstError();
     } else {
-    }
+    }*/
   }
 
   onSubmit2() {
