@@ -3,11 +3,11 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { BehaviorSubject, combineLatest } from 'rxjs';
 import { Roles } from 'src/app/types/consts';
 
-interface ICallback<P, T> {
+export interface ICallback<P, T> {
   (props: P): T;
 }
 
-interface IAuthServiceSubscribeCallback {
+export interface IAuthServiceSubscribeCallback {
   isLoggedIn: boolean;
   role: Roles;
 }
@@ -46,7 +46,12 @@ export class AuthServiceService implements OnDestroy {
   silentLogin() {
     //this.login()
   }
-  register() {}
+  register(data: any) {
+    console.log('USPJEEEH ');
+    return this.http.post(`${this.url}register`, data, {
+      headers: this.headers,
+    });
+  }
   logout() {
     this.isLoggedIn$.next(false);
     this.role$.next(Roles.anonymus);

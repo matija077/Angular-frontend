@@ -4,20 +4,11 @@ import { Directive, ElementRef, HostListener } from '@angular/core';
   selector: '[appInvalidControlScroll]',
 })
 export class InvalidControlScrollDirective {
-  constructor(private form: ElementRef) {
-    console.log('radi')
-  }
+  constructor(private form: ElementRef) {}
 
   @HostListener('ngSubmit')
   onSubmit() {
-    console.log('tu sam');
     this.scrollToFirstError();
-  }
-
-  @HostListener('click')
-  onClick() {
-    console.log('tu sam');
-    //this.scrollToFirstError();
   }
 
   scrollToFirstError() {

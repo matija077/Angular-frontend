@@ -8,7 +8,6 @@ import { PlayerModule } from './player/player.module';
 import { HomeComponent } from './components/home/home.component';
 import { NavbarComponent } from './shared/navbar/navbar.component';
 import { ResizeService } from './services/resize-observer/resize.service';
-
 @NgModule({
   declarations: [AppComponent, HomeComponent, NavbarComponent],
   imports: [BrowserModule, AppRoutingModule, HttpClientModule, PlayerModule],

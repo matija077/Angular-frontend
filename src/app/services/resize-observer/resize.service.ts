@@ -6,7 +6,6 @@ export class ResizeService implements OnDestroy {
   private _handleResize?: ResizeObserverCallback;
 
   constructor() {
-    console.log('koliko puta');
     this.resizeObserver = new ResizeObserver(this.handleResize.bind(this));
   }
 

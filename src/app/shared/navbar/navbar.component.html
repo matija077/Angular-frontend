@@ -6,14 +6,14 @@
   <div class="toolbar--login">
     <ng-container *ngIf="isLoggedIn; then loggedIn; else loggedOut"></ng-container>
     <ng-template #loggedIn>
-      <div>
+      <div data-id="Login">
         <span>{{userName}}</span>
         <span (click)="logout()">Logout</span>
         <span [routerLink]="['/player/profile']">Profile</span>
       </div>
     </ng-template>
     <ng-template #loggedOut>
-      <div><span (click)=" login()">Login</span><span routerLink="/player/register">Register</span>
+      <div data-id="Logout"><span data-id="loginButton" (click)=" login()">Login</span><span routerLink="/player/register">Register</span>
       </div>
     </ng-template>
   </div>

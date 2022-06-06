@@ -6,29 +6,26 @@ import { OrientationService } from './services/orientation-service/orientation.s
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements AfterViewChecked {
   @ViewChild('test') testic: any;
-   twoWayBind?: string;
+  twoWayBind?: string;
 
-  constructor(private authService: AuthServiceService, @Inject('isMobile') isMob: any, os: OrientationService) {
-    console.log(isMob)
-  }
-  twoWayBindChange() {
+  constructor(
+    private authService: AuthServiceService,
+    @Inject('isMobile') isMob: any,
+    os: OrientationService
+  ) {}
+  twoWayBindChange() {}
 
-  }
+  ngAfterViewChecked() {}
 
-  ngAfterViewChecked() {
-
-  }
-
-  get isLoggedIn(){
-    return this.authService.isLoggedIn
+  get isLoggedIn() {
+    return this.authService.isLoggedIn;
   }
 
   login() {
-    this.authService.login()
+    this.authService.login();
   }
-
 }

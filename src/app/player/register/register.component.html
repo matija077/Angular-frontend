@@ -1,10 +1,10 @@
 <h2>Reactiv Forms</h2>
 <div class="emptySpace"></div>
-<form [formGroup]="formGroup" (ngSubmit)="onSubmit()" #reactiveFormRef appInvalidControlScroll >
+<form [formGroup]="formGroup" (ngSubmit)="onSubmit($event)" #reactiveFormRef appInvalidControlScroll>
   <div class="form-group">
     <!-- First Name -->
     <label for="first_name" class="control-label">First Name</label>
-    <input type="text" class="form-control" id="first_name" name="first_name" placeholder="Martin"
+    <input type="text" class="form-control" id="first_name_r" name="first_name" placeholder="Martin"
       formControlName="name">
     <div [hidden]="formGroup.controls['name']?.valid || getControl('name')?.pristine" class="alert alert-danger">name is
       required</div>
@@ -14,23 +14,23 @@
   <div class="form-group">
     <!-- Last Name -->
     <label for="last_name" class="control-label">Last Name</label>
-    <input type="text" class="form-control" id="last_name" name="last_name" placeholder="Toha"
+    <input type="text" class="form-control" id="last_name_r" name="last_name" placeholder="Toha"
       formControlName="lastName">
   </div>
 
   <div class="form-group">
     <!-- Email -->
     <label for="email" class="control-label">E-mail</label>
-    <input type="text" class="form-control" id="email" name="email" placeholder="your@email.com"
+    <input type="text" class="form-control" id="email_r" name="email" placeholder="your@email.com"
       formControlName="email">
   </div>
 
   <div class="form-group">
     <!-- Zip Code-->
     <label for="zipcode" class="control-label">Zip Code</label>
-    <input #zipCodeReactive type="text" class="form-control" id="zipcode" name="zipcode" placeholder="#####"
+    <input #zipCodeReactive type="text" class="form-control" id="zipcode_r" name="zipcode" placeholder="#####"
       formControlName="zipCode">
-      <span> {{zipCodeReactive.value}}</span>
+    <span> {{zipCodeReactive.value}}</span>
     <div *ngFor="let error of formGroup.controls['zipCode'].errors | keyvalue">
       <span>{{error.value}}</span>
     </div>
@@ -39,13 +39,27 @@
   <div class="form-group">
     <!-- Password -->
     <label for="password" class="control-label">Password</label>
-    <input type="text" class="form-control" id="password" name="password" placeholder="*****"
-      formControlName="password">
+    <input type="text" class="form-control" id="password_r" name="password" placeholder="*****"
+      formControlName="password" #reactivePassword>
+    <div (click)="showPassword(reactivePassword)" class="control-additional-control">Show</div>
+  </div>
+
+  <div class="form-group" formArrayName="hobbies">
+    <button type="button" (click)="onAddHobby()">Add a hobby</button>
+    <ng-container *ngFor="let hobby of getHobbies().controls; let i = index">
+      <div class="form-group" formGroupName="{{i}}">
+        <input type="text" class="form-control" name="hobbyName" placeholder="Skateboarding" formControlName="name">
+        <input type="datetime" class="form-control" name="hobbyDuration" formControlName="duration">
+        <button (click)="deleteHobby(i)">Delete</button>
+        <br />
+      </div>
+    </ng-container>
+
   </div>
 
   <div class="form-group">
     <!-- Register Button -->
-    <button  type="submit" class="btn btn-primary">Register</button>
+    <button type="submit" [disabled]="isSubmittingReactive" class="btn btn-primary">Register</button>
   </div>
 </form>
 
@@ -62,29 +76,33 @@
   <div class="form-group">
     <!-- First Name -->
     <label for="first_name" class="control-label">First Name</label>
-    <input type="text" required class="form-control" id="first_name" name="first_name" placeholder="Martin"
-      [(ngModel)]="template.name" #templateName="ngModel">
+    <input type="text" required class="form-control" id="first_name_t" name="first_name" placeholder="Martin"
+      [(ngModel)]="template.name" #templateName="ngModel" minlength="4">
     <div [hidden]="templateName.valid || templateName.pristine" class="alert alert-danger">name is required</div>
   </div>
 
   <div class="form-group">
     <!-- Last Name -->
     <label for="last_name" class="control-label">Last Name</label>
-    <input type="text" class="form-control" id="last_name" name="last_name" placeholder="Toha"
-      [(ngModel)]="template.lastName">
+    <input type="text" class="form-control" id="last_name_t" name="last_name_t" placeholder="Toha"
+      [(ngModel)]="template.lastName" #templateLastName="ngModel" minlength="4">
+    <div [hidden]="templateLastName.valid || templateLastName.pristine" class="alert alert-danger">lastName is required
+    </div>
   </div>
 
   <div class="form-group">
     <!-- Email -->
     <label for="email" class="control-label">E-mail</label>
-    <input type="text" class="form-control" id="email" name="email" placeholder="your@email.com"
-      [(ngModel)]="template.email">
+    <input type="email" required class="form-control" id="email_t" name="email" placeholder="your@email.com"
+      [(ngModel)]="template.email" #templateEmail="ngModel">
+    <div [hidden]="templateEmail.valid || templateEmail.pristine">Email must be valid</div>
+    <div>{{templateEmail.valid}}</div>
   </div>
 
   <div class="form-group">
     <!-- Zip Code-->
     <label for="zipcode" class="control-label">Zip Code</label>
-    <input type="text" class="form-control" id="zipcode" name="zipcode" placeholder="#####"
+    <input type="text" class="form-control" id="zipcode_t" name="zipcode_t" placeholder="#####"
       [(ngModel)]="template.zipCode" #zip="ngModel">
     <span>zip code is : {{zip.value}}</span>
   </div>
@@ -92,9 +110,17 @@
   <div class="form-group">
     <!-- Password -->
     <label for="password" class="control-label">Password</label>
-    <input type="text" class="form-control" id="password" name="password" placeholder="*****"
-      [(ngModel)]="template.password">
+    <input type="password" class="form-control" id="password_t" name="password" placeholder="*****"
+      [(ngModel)]="template.password" autocomplete="new-password" #templatePassword=ngModel>
   </div>
+  <div class="form-group">
+    <!-- Confirm Password -->
+    <label for="password" class="control-label">Confirm password</label>
+    <input required type="password" class="form-control" id="confirmPassword_t" name="confirmPassword"
+      placeholder="*****" [(ngModel)]="template.confirmPassword" autocomplete="new-password" appPasswordValidator
+      [appPasswordValidatorInput]="template.confirmPassword">
+  </div>
+
 
   <div class="form-group">
     <!-- Extra -->

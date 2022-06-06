@@ -28,7 +28,6 @@ export class CustomValidatorsService {
 
   UserNameValidator2(control: AbstractControl) {
     const p = new Promise((res, rej) => {
-      console.log(control);
       return true;
     });
   }
@@ -38,9 +37,8 @@ export class CustomValidatorsService {
 
     return function (control: AbstractControl): ValidatorsReturnType {
       if (control.pristine) {
-        return null
+        return null;
       }
-
 
       const map: Record<string, { length: number; firstChars: string }> = {
         hr: {
@@ -51,7 +49,7 @@ export class CustomValidatorsService {
 
       let countryRules = map[country];
       if (!countryRules) {
-        countryRules = map['hr']
+        countryRules = map['hr'];
       }
       const inputValue = String(control.value);
 
@@ -86,7 +84,6 @@ export class CustomValidatorsService {
   }
 
   Form(type: AbstractControl): ValidatorsReturnType {
-    //console.log(type)
-    return null
+    return null;
   }
 }

@@ -1,19 +1,19 @@
 .form-group {
-  margin-bottom: 1REM;
+  margin-bottom: 1rem;
   display: flex;
   flex-direction: column;
 }
 
-.ng-valid:not(form) {
+input.ng-valid {
   border-left: 5px solid green;
 }
 
-.ng-invalid:not(form) {
+input.ng-invalid {
   border-left: 5px solid red;
 }
 
 .alert {
-  min-height: 2REM;
+  min-height: 2rem;
 
   &-danger {
     color: red;
@@ -24,4 +24,8 @@
 .emptySpace {
   position: relative;
   height: 100vh;
+}
+
+.control-additional-control {
+  display: inline-block;
 }
