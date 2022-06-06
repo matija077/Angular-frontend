@@ -39,9 +39,10 @@
   <div class="form-group">
     <!-- Password -->
     <label for="password" class="control-label">Password</label>
-    <input type="text" class="form-control" id="password_r" name="password" placeholder="*****"
-      formControlName="password" #reactivePassword>
-    <div (click)="showPassword(reactivePassword)" class="control-additional-control">Show</div>
+    <div class="password_input"><input type="text" class="form-control" id="password_r" name="password" placeholder="*****"
+      formControlName="password" #reactivePassword appShowPassword>
+    <span (click)="showPassword(reactivePassword)" class="control-additional-control" appShowPassword>Show</span>
+  </div>
   </div>
 
   <div class="form-group" formArrayName="hobbies">
@@ -113,6 +114,7 @@
     <input type="password" class="form-control" id="password_t" name="password" placeholder="*****"
       [(ngModel)]="template.password" autocomplete="new-password" #templatePassword=ngModel>
   </div>
+
   <div class="form-group">
     <!-- Confirm Password -->
     <label for="password" class="control-label">Confirm password</label>

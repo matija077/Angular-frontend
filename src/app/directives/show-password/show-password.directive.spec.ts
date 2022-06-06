@@ -5,7 +5,7 @@ import { ShowPasswordDirective } from './show-password.directive';
 
 @Component({
   template: `<div>
-    <input type="password" /><span appShowPassword>CLick</span>
+    <input type="password" /><span appShowPassword>Click</span>
   </div>`,
 })
 class TestShowPasswordComponent {}
@@ -13,7 +13,6 @@ class TestShowPasswordComponent {}
 describe('ShowPasswordDirective', () => {
   let component: TestShowPasswordComponent;
   let fixture: ComponentFixture<TestShowPasswordComponent>;
-  let directive: any;
   let inputEl: DebugElement;
   let button: DebugElement;
 
@@ -41,7 +40,7 @@ describe('ShowPasswordDirective', () => {
     expect(inputEl.nativeElement.value).toBe('33');
   });
 
-  it('password flow', () => {
+  it('password integration', () => {
     inputEl.nativeElement.value = '33';
     expect(inputEl.nativeElement.value).toBe('33');
 

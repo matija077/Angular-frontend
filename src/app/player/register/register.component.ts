@@ -139,7 +139,7 @@ export class RegisterComponent implements OnInit, AfterViewChecked {
   }
 
   showPassword(passwordInput: HTMLInputElement) {
-    this.togglePasswordVisibility(passwordInput);
+    //this.togglePasswordVisibility(passwordInput);
   }
 
   onSubmit(event: Event) {
