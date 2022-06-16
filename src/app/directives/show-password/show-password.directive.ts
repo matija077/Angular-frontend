@@ -10,12 +10,19 @@ export class ShowPasswordDirective implements OnDestroy {
   );
   private passwordInput: HTMLInputElement;
   private passwordInputTypeSubsc$: Subscription;
+  private isEmptySubsc$: Subscription;
+  private isEmpty$ = new BehaviorSubject(true);
 
   @HostListener('click')
   onTogglePassword() {
     this.passwordInputType$.next(
       this.passwordInputType$.value === 'password' ? 'text' : 'password'
     );
+  }
+
+  private onInputChange(event: any) {
+    const data = event.data;
+    this.isEmpty$.next(data === '' || data == null);
   }
 
   constructor(private passwordShowToggle: ElementRef) {
@@ -26,9 +33,17 @@ export class ShowPasswordDirective implements OnDestroy {
     this.passwordInputTypeSubsc$ = this.passwordInputType$.subscribe((type) => {
       this.passwordInput.type = type;
     });
+
+    this.passwordInput.addEventListener('input', this.onInputChange.bind(this));
+    this.isEmptySubsc$ = this.isEmpty$.subscribe((isEmpty) => {
+      const className = '--empty';
+      const classList = this.passwordShowToggle.nativeElement.classList;
+      isEmpty ? classList.add(className) : classList.remove(className);
+    });
   }
 
   ngOnDestroy() {
     this.passwordInputTypeSubsc$.unsubscribe();
+    this.isEmptySubsc$.unsubscribe();
   }
 }
