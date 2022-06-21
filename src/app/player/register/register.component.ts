@@ -75,7 +75,14 @@ export class RegisterComponent implements OnInit, AfterViewChecked {
           updateOn: 'blur',
         },
       ],
-      email: ['', { validators: [Validators.required, Validators.email] }],
+      email: [
+        '',
+        {
+          validators: [Validators.required, Validators.email],
+          asyncValidator: this.CustomValidators.EmailValidator,
+          updateOn: 'blur',
+        },
+      ],
       zipCode: [
         '',
         {

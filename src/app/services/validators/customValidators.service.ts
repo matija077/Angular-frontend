@@ -1,3 +1,4 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import {
   AbstractControl,
@@ -6,14 +7,18 @@ import {
   ValidatorFn,
   Validators,
 } from '@angular/forms';
+import { Observable, take } from 'rxjs';
 
 type ValidatorsReturnType = ValidationErrors | null;
+type AsyncValidatorReturnType =
+  | Promise<ValidatorsReturnType>
+  | Observable<ValidatorsReturnType>;
 
 @Injectable({
   providedIn: 'root',
 })
 export class CustomValidatorsService {
-  constructor() {}
+  constructor(public http: HttpClient) {}
 
   UserNameValidator(input: string): ValidatorFn {
     return function validator(
@@ -85,5 +90,33 @@ export class CustomValidatorsService {
 
   Form(type: AbstractControl): ValidatorsReturnType {
     return null;
+  }
+
+   EmailValidator(control: AbstractControl): AsyncValidatorReturnType {
+    console.log('saljem')
+    debugger
+    if (!this.http) {
+      return Promise.reject()
+    }
+   return this.http.get('/api/validate/email').pipe(take(1))
+    //const res = await this.http.get('/api/validate/email')
+   // console.log(res)
+    //if (control.value === '') {
+      /*return new Observable((sub) => {
+        sub.next({ email: 'error' });
+        sub.complete();
+      });*/
+
+      //return Promise.resolve({error: 'empty'})
+    //}
+
+    /*return new Observable((sub) => {
+      sub.next(null);
+      sub.complete();
+    });*/
+
+    //return Promise.resolve(null)
+
+
   }
 }
