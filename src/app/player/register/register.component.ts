@@ -75,7 +75,13 @@ export class RegisterComponent implements OnInit, AfterViewChecked {
           updateOn: 'blur',
         },
       ],
-      email: ['', { validators: [Validators.required, Validators.email] }],
+      email: [
+        '',
+        {
+          asyncValidators: [this.CustomValidators.EmailValidator.bind(this.CustomValidators)],
+          updateOn: 'blur',
+        },
+      ],
       zipCode: [
         '',
         {
@@ -95,7 +101,7 @@ export class RegisterComponent implements OnInit, AfterViewChecked {
       hobbies: this.fb.array([], { updateOn: 'blur' }),
     };
     const options: AbstractControlOptions = {
-      //validators: [this.CustomValidators.Form.bind(this.CustomValidators)],
+      validators: [this.CustomValidators.Form.bind(this.CustomValidators)],
     };
     this.formGroup = this.fb.group(controlsConfig, options);
   }
