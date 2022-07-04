@@ -89,12 +89,10 @@ export class CustomValidatorsService {
   }
 
   Form(type: AbstractControl): ValidatorsReturnType {
-    console.log('test');
     return null;
   }
 
   EmailValidator(control: AbstractControl): AsyncValidatorReturnType {
-    console.error('saljem');
     debugger;
     if (!this.http) {
       return Promise.reject();
