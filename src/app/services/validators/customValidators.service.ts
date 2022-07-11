@@ -2,17 +2,19 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import {
   AbstractControl,
-  FormGroup,
-  ValidationErrors,
+  ValidationErrors as ValidationErrorsFromAngular,
   ValidatorFn,
-  Validators,
 } from '@angular/forms';
 import { catchError, Observable, of, take } from 'rxjs';
 
-type ValidatorsReturnType = ValidationErrors | null;
 type AsyncValidatorReturnType =
   | Promise<ValidatorsReturnType>
   | Observable<ValidatorsReturnType>;
+import ValidationErrors, {
+  ValidationErrorsReturnType,
+} from 'src/app/shared/Errors/ValidationErrors';
+
+type ValidatorsReturnType = ValidationErrorsFromAngular | null;
 
 @Injectable({
   providedIn: 'root',
@@ -23,7 +25,7 @@ export class CustomValidatorsService {
   UserNameValidator(input: string): ValidatorFn {
     return function validator(
       control: AbstractControl
-    ): ValidationErrors | null {
+    ): ValidationErrorsFromAngular | null {
       if ((control.value as string).includes('0')) {
         return { error: true };
       }
@@ -86,6 +88,16 @@ export class CustomValidatorsService {
 
       return null;
     };
+  }
+
+  Password(control: AbstractControl): ValidationErrorsReturnType {
+    if (control.value.password === control.value.confirmPassword) {
+      return null;
+    }
+
+    return ValidationErrors.createValidationError({
+      type: ValidationErrors.ValidationErrors.PasswordsNotMatching,
+    });
   }
 
   Form(type: AbstractControl): ValidatorsReturnType {

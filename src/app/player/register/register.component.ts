@@ -2,6 +2,7 @@ import {
   AfterViewChecked,
   Component,
   ElementRef,
+  OnDestroy,
   OnInit,
   ViewChild,
 } from '@angular/core';
@@ -15,16 +16,21 @@ import {
   NgForm,
   Validators,
 } from '@angular/forms';
-import { finalize } from 'rxjs';
+import { BehaviorSubject, finalize } from 'rxjs';
 import { AuthServiceService } from 'src/app/services/auth-service/auth-service.service';
+import { DestroyService } from 'src/app/services/destroy/destroy.service';
 import { CustomValidatorsService } from 'src/app/services/validators/customValidators.service';
 
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.scss'],
+  providers: [{ provide: DestroyService, useClass: DestroyService }],
 })
-export class RegisterComponent implements OnInit, AfterViewChecked {
+/**
+ * uses appShowPassword directive which uses on
+ */
+export class RegisterComponent implements OnInit, AfterViewChecked, OnDestroy {
   // REACTIVE PART
   /*formGroup = new FormGroup({
     name: new FormControl(null, Validators.required),
@@ -40,6 +46,8 @@ export class RegisterComponent implements OnInit, AfterViewChecked {
   @ViewChild('reactiveFormRef')
   reactiveFormRef?: ElementRef<HTMLFormElement>;
   isSubmittingReactive = false;
+  t: any;
+  t2: any;
 
   // TEMPLATE PART
   template = {
@@ -58,8 +66,11 @@ export class RegisterComponent implements OnInit, AfterViewChecked {
     private CustomValidators: CustomValidatorsService,
     // this is an acutal DOM element passed by Angular of this component
     private el: ElementRef,
-    private authService: AuthServiceService
+    private authService: AuthServiceService,
+    private destroyService: DestroyService
   ) {
+    this.t2 = new BehaviorSubject(true)
+    this.t2 = this.destroyService.takeUntilDestroyed(this.t2)
     const controlsConfig = {
       name: [
         '',
@@ -98,10 +109,17 @@ export class RegisterComponent implements OnInit, AfterViewChecked {
         '',
         { validators: [Validators.required, Validators.minLength(4)] },
       ],
+      confirmPassword: [
+        '',
+        { validators: [Validators.required, Validators.minLength(4)] },
+      ],
       hobbies: this.fb.array([], { updateOn: 'blur' }),
     };
     const options: AbstractControlOptions = {
-      validators: [this.CustomValidators.Form.bind(this.CustomValidators)],
+      validators: [
+        this.CustomValidators.Form.bind(this.CustomValidators),
+        this.CustomValidators.Password,
+      ],
     };
     this.formGroup = this.fb.group(controlsConfig, options);
   }
@@ -109,6 +127,11 @@ export class RegisterComponent implements OnInit, AfterViewChecked {
   ngOnInit(): void {}
 
   ngAfterViewChecked() {}
+
+  ngOnDestroy() {
+    this.destroyService.destroyComponent();
+
+  }
 
   onAddHobby() {
     const g = this.fb.group({
@@ -136,18 +159,6 @@ export class RegisterComponent implements OnInit, AfterViewChecked {
     return this.getControl('hobbies') as FormArray;
   }
 
-  private togglePasswordVisibility(passwordInput: HTMLInputElement) {
-    if (passwordInput.type === 'password') {
-      passwordInput.type = 'text';
-    } else {
-      passwordInput.type = 'password';
-    }
-  }
-
-  showPassword(passwordInput: HTMLInputElement) {
-    //this.togglePasswordVisibility(passwordInput);
-  }
-
   onSubmit(event: Event) {
     event.preventDefault();
 
@@ -157,15 +168,25 @@ export class RegisterComponent implements OnInit, AfterViewChecked {
 
     this.isSubmittingReactive = true;
     this.formGroup.reset();
+    this.formGroup.controls['hobbies'] = this.fb.array([], {
+      updateOn: 'blur',
+    });
 
-    const registerSubscription = this.authService
+    console.log(this.formGroup);
+
+    const registerTemp = this.authService
       .register(this.formGroup.value)
       .pipe(finalize(() => (this.isSubmittingReactive = false)));
 
-    registerSubscription.subscribe({
-      next: (data) => {},
-      error: (err) => console.error('error registeringP'),
-    });
+    this.t = this.destroyService
+      .takeUntilDestroyedComponent(registerTemp)
+      .subscribe({
+        next: (data) => {},
+        error: (err) => console.error('error registeringP'),
+      });
+
+      setTimeout(() => {this.destroyService.destroyComponent();   console.log(this.t)}, 5000)
+      setTimeout(() => {this.destroyService.destroy(this.t2); }, 2000)
   }
 
   onSubmit2() {

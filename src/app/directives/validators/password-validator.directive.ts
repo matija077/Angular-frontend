@@ -1,4 +1,4 @@
-import { Attribute, Directive, Input } from '@angular/core';
+import { Directive } from '@angular/core';
 import { AbstractControl, NG_VALIDATORS, Validator } from '@angular/forms';
 
 @Directive({
@@ -6,17 +6,18 @@ import { AbstractControl, NG_VALIDATORS, Validator } from '@angular/forms';
   providers: [
     {
       provide: NG_VALIDATORS,
-      useClass: PasswordValidatorDirective,
+      useExisting: PasswordValidatorDirective,
       multi: true,
     },
   ],
 })
 export class PasswordValidatorDirective implements Validator {
-  constructor(@Attribute('appPasswordValidator') public PasswordControl: any) {}
-
-  @Input() appPasswordValidatorInput: any;
+  constructor() {}
 
   validate(control: AbstractControl) {
-    return null;
+    return control.get('password')?.value ===
+      control.get('confirmPassword')?.value
+      ? null
+      : { error: "password don't match" };
   }
 }

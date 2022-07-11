@@ -36,7 +36,6 @@ export class AuthServiceService implements OnDestroy {
       .post(`${this.url}login`, body, { headers: this.headers })
       .subscribe({
         next: (data) => {
-          console.log(data);
           this.isLoggedIn$.next(!!data);
           this.role$.next(Roles.admin);
         },
