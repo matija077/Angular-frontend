@@ -9,7 +9,7 @@
 
 <div class="content">
   test template variable is user login from navbar: <h6>{{test.isLoggedIn}}</h6>
-  <app-navbar #test></app-navbar>
+  <app-navbar [scrollDirection]="scrollDirection" #test></app-navbar>
 
   <router-outlet>
 

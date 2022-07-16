@@ -1,5 +1,11 @@
 export enum Roles {
   anonymus,
   user,
-  admin
+  admin,
+}
+
+export enum ScrollingStates {
+  REST,
+  UP,
+  DOWN,
 }

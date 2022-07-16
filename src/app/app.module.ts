@@ -8,9 +8,16 @@ import { PlayerModule } from './player/player.module';
 import { HomeComponent } from './components/home/home.component';
 import { NavbarComponent } from './shared/navbar/navbar.component';
 import { ResizeService } from './services/resize-observer/resize.service';
+import { CommonModule } from '@angular/common';
 @NgModule({
   declarations: [AppComponent, HomeComponent, NavbarComponent],
-  imports: [BrowserModule, AppRoutingModule, HttpClientModule, PlayerModule],
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    HttpClientModule,
+    PlayerModule,
+    CommonModule,
+  ],
   providers: [
     { provide: APP_INITIALIZER, useFactory: preLoad, multi: true },
     { provide: APP_INITIALIZER, useFactory: preLoad, multi: true },

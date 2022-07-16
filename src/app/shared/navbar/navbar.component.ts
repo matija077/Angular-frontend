@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnInit } from '@angular/core';
 import { AuthServiceService } from 'src/app/services/auth-service/auth-service.service';
+import { ScrollingStates } from 'src/app/types/consts';
 
 @Component({
   selector: 'app-navbar',
@@ -9,13 +10,15 @@ import { AuthServiceService } from 'src/app/services/auth-service/auth-service.s
 export class NavbarComponent implements OnInit {
   isLoggedIn = false;
   userName: string;
-  private a = 3;
+
+  @Input() public scrollDirection: ScrollingStates;
 
   constructor(private authService: AuthServiceService) {
     authService.subscribe(({ isLoggedIn }) => {
       this.isLoggedIn = isLoggedIn;
     });
     this.userName = 'Ja';
+    this.scrollDirection = ScrollingStates.REST;
   }
 
   ngOnInit(): void {}
@@ -25,5 +28,13 @@ export class NavbarComponent implements OnInit {
   }
   logout() {
     this.authService.logout();
+  }
+  getToolbarClassName() {
+    const map: Record<ScrollingStates, string> = {
+      [ScrollingStates.REST]: '',
+      [ScrollingStates.DOWN]: 'toolbar--scrollingDown',
+      [ScrollingStates.UP]: 'toolbar--scrollingUp',
+    };
+    return `toolbar ${map[this.scrollDirection]}`;
   }
 }
